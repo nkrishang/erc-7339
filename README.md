@@ -19,7 +19,7 @@ This project uses Foundry and Bun. It and uses `forge` and `anvil` for local dev
 1. Clone this repository:
 
 ```bash
-git clone ...
+git clone https://github.com/nkrishang/erc-7339.git
 ```
 
 2. Install smart contract dependencies
