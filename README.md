@@ -4,7 +4,7 @@
 >
 > See [https://eips.ethereum.org/EIPS/eip-7739](https://eips.ethereum.org/EIPS/eip-7739)
 
-This repo is showcase for showcase for the `TypedDataSign` workflow of [EIP-7739](https://eips.ethereum.org/EIPS/eip-7739).
+This repo is a showcase for the `TypedDataSign` workflow of [EIP-7739](https://eips.ethereum.org/EIPS/eip-7739).
 
 - "Account Contract" (`ContractSigner`) implements [1] EIP-1271 and [2] EIP-7739. This lets an EOA who is authorized on this contract (i.e. the return value of `_erc1271Signer`) use EIP-712 typed data signatures to interact with any given protocols, acting on behalf of this contract.
 
