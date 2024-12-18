@@ -5,7 +5,6 @@ import {Script, console} from "forge-std/Script.sol";
 import {ContractSigner, MessageBoard} from "../src/ContractSigner.sol";
 
 contract LocalDeployScript is Script {
-    
     ContractSigner public contractSigner;
     MessageBoard public board;
 

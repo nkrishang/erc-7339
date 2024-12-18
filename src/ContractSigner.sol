@@ -7,20 +7,19 @@ import "lib/solady/src/accounts/ERC1271.sol";
 
 /**
  * PURPOSE: showcase for the `TypedDataSign` workflow of [EIP-7739](https://eips.ethereum.org/EIPS/eip-7739)
- *  
+ *
  * "Account Contract" (`ContractSigner`) implements [1] EIP-1271 and [2] EIP-7739. This lets an EOA who is authorized
  * on this contract (i.e. the return value of `_erc1271Signer`) use EIP-712 typed data signatures to interact with
  * any given protocols, acting on behalf of this contract.
- * 
+ *
  * "App Contract" (`MessageBoard`) is an example of an app / protocol smart contract that requires users to use EIP-712
  * typed data signatures to interact with it. This contract calls `EIP1271.isValidSignature` when it detects that it is
  * meant to process a signature made on behalf of a smart contract.
- * 
+ *
  * EIP-7739 prevents an EOA's signature (for one specific instance of `ContractSigner`) from being replayed as a signature
  * made on behalf of any other `ContracSigner` contract on which the EOA is authorized.
  */
 contract ContractSigner is ERC1271 {
-
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
     /*                          STATE                             */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
@@ -44,7 +43,8 @@ contract ContractSigner is ERC1271 {
         view
         virtual
         override
-    returns (string memory name, string memory version) {
+        returns (string memory name, string memory version)
+    {
         name = "ContractSigner";
         version = "1";
     }
@@ -55,7 +55,6 @@ contract ContractSigner is ERC1271 {
 }
 
 contract MessageBoard is EIP712 {
-
     using ECDSA for bytes32;
 
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
@@ -85,26 +84,21 @@ contract MessageBoard is EIP712 {
     /*                          STATE                             */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
-    mapping (address sender => uint num) public numOfSigner;
+    mapping(address sender => uint256 num) public numOfSigner;
 
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
     /*                         TARGET                             */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     function send(Message calldata data, bytes calldata _signature) external {
+        bytes32 hash = _hashTypedData(keccak256(abi.encode(MESSAGE_TYPEHASH, data.sender, data.num)));
 
-        bytes32 hash = _hashTypedData(keccak256(abi.encode(
-            MESSAGE_TYPEHASH,
-            data.sender,
-            data.num
-        )));
-        
-        if(data.sender.code.length > 0) {
-            if(ERC1271(data.sender).isValidSignature(hash, _signature) != ERC1271_MAGIC_VALUE) {
+        if (data.sender.code.length > 0) {
+            if (ERC1271(data.sender).isValidSignature(hash, _signature) != ERC1271_MAGIC_VALUE) {
                 revert InvalidContractSigner();
             }
         } else {
-            if(hash.recover(_signature) != data.sender) {
+            if (hash.recover(_signature) != data.sender) {
                 revert InvalidEOASigner();
             }
         }
@@ -121,7 +115,8 @@ contract MessageBoard is EIP712 {
         view
         virtual
         override
-    returns (string memory name, string memory version) {
+        returns (string memory name, string memory version)
+    {
         name = "MessageBoard";
         version = "1";
     }
